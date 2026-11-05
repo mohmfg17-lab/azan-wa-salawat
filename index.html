@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https://api.github.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>Azan wa Salawat - أذان وصلوات</title>
+<meta name="description" content="Free prayer times widget for Windows: today's times, a countdown to the next prayer, and a notification at each prayer. No installation, works offline.">
+<link rel="icon" href="favicon.ico">
+<style>
+:root {
+  --bg: #f7f6f2; --surface: #ffffff; --text: #1d2420; --muted: #5d6762; --line: #e3e1da;
+  --accent: #1f7a55; --accent-text: #ffffff; --accent-soft: #e2f1ea; --stage: linear-gradient(160deg, #dfeee6, #ece8dc);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111413; --surface: #1a1e1c; --text: #e8ece9; --muted: #9aa49f; --line: #2b302d;
+    --accent: #3ec58a; --accent-text: #08130e; --accent-soft: #17291f; --stage: linear-gradient(160deg, #18261f, #1d1c19);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 17px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, "Noto Sans", "Noto Sans Arabic", Tahoma, sans-serif;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+a { color: var(--accent); }
+h1, h2, h3 { line-height: 1.25; margin: 0; }
+h2 { font-size: 1.35rem; margin-bottom: 12px; }
+p { margin: 0 0 12px; }
+
+/* Top */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 532px); gap: 40px; align-items: center; padding: 56px 0 48px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; }
+.brand img { width: 32px; height: 32px; }
+h1 { font-size: 2.6rem; letter-spacing: -0.01em; }
+.ar { display: block; text-align: left; font-size: 2.1rem; color: var(--accent); margin-top: 4px; font-weight: 600; }
+.lead { font-size: 1.15rem; color: var(--muted); margin: 18px 0 28px; max-width: 30em; }
+.download {
+  display: inline-flex; align-items: center; gap: 12px; padding: 16px 30px; border-radius: 12px;
+  background: var(--accent); color: var(--accent-text); text-decoration: none; font-size: 1.2rem; font-weight: 600;
+  box-shadow: 0 6px 18px rgba(31, 122, 85, 0.25);
+}
+.download:hover { filter: brightness(1.08); }
+.download:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+.download svg { width: 22px; height: 22px; flex: none; }
+.meta { color: var(--muted); font-size: 0.92rem; margin-top: 14px; }
+.meta a { color: inherit; }
+.notice {
+  display: none; margin-top: 16px; padding: 10px 14px; border-radius: 8px; font-size: 0.95rem;
+  background: var(--accent-soft); color: var(--text); max-width: 30em;
+}
+.notice.show { display: block; }
+
+.stage {
+  background: var(--stage); border-radius: 18px; padding: 32px 24px 24px; display: flex; gap: 20px;
+  justify-content: center; align-items: flex-start; flex-wrap: wrap;
+}
+.stage figure { margin: 0; text-align: center; flex: 0 1 232px; min-width: 0; }
+.stage img {
+  display: block; width: 100%; height: auto; border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.stage img.bar { margin-top: 16px; }
+.stage figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 10px; }
+.stage-note { flex: 1 0 100%; text-align: center; font-size: 0.9rem; color: var(--muted); margin: 4px 0 0; }
+img.desktop {
+  display: block; width: 100%; height: auto; border-radius: 12px; margin-top: 8px;
+  border: 1px solid var(--line); box-shadow: 0 12px 36px rgba(0, 0, 0, 0.14);
+}
+
+/* Sections */
+section { padding: 36px 0; border-top: 1px solid var(--line); }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
+.feature { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.feature h3 { font-size: 1.02rem; margin-bottom: 6px; }
+.feature p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+ol.steps li { counter-increment: s; position: relative; padding-left: 44px; margin-bottom: 14px; }
+ol.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent); font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+.box h3 { font-size: 1.02rem; margin-bottom: 6px; }
+.box p:last-child { margin-bottom: 0; }
+.muted { color: var(--muted); }
+#notes h3 { font-size: 0.95rem; margin: 10px 0 4px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+#notes ul { margin: 0 0 8px; padding-left: 22px; }
+#notes li { margin-bottom: 6px; }
+code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 0.9em; overflow-wrap: anywhere; }
+footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 0.92rem; }
+footer a { color: inherit; }
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 36px; }
+}
+@media (max-width: 820px) {
+  .features { grid-template-columns: 1fr 1fr; }
+  .cols { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  h1 { font-size: 2.1rem; }
+  .ar { font-size: 1.8rem; }
+  .download { width: 100%; justify-content: center; }
+  .features { grid-template-columns: 1fr; }
+  .stage { padding: 24px 12px; gap: 12px; }
+  .stage figure { flex-basis: calc(50% - 6px); }
+  .stage img.bar { margin-top: 10px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div>
+      <div class="brand"><img src="favicon.ico" alt="" width="32" height="32">Prayer times for your Windows desktop</div>
+      <h1>Azan wa Salawat <span class="ar" lang="ar" dir="rtl">أذان وصلوات</span></h1>
+      <p class="lead">Today's prayer times, a countdown to the next prayer, and a notification at each prayer, in a small
+        window on your desktop. Free, no installation, works offline.</p>
+      <a class="download" id="download" href="https://github.com/mohmfg17-lab/azan-wa-salawat/releases/latest/download/Azan-wa-Salawat-Windows.zip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 10 6 6 6-6"/><path d="M4 20h16"/></svg>
+        Download for Windows
+      </a>
+      <p class="meta"><span id="version">Latest version</span> · Windows 10 and 11 ·
+        <a href="https://github.com/mohmfg17-lab/azan-wa-salawat/releases">All versions</a></p>
+      <p class="notice" id="not-windows">This app is for Windows PCs. Open this page on your Windows PC to download it.</p>
+    </div>
+    <div class="stage">
+      <figure>
+        <img src="widget-light.png" alt="The widget in light theme: the city, a countdown to Maghrib, and today's six prayer times" width="232" height="230">
+        <img class="bar" src="bar-light.png" alt="The widget minimized to one line: next prayer, countdown and city" width="232" height="34">
+        <figcaption>Light</figcaption>
+      </figure>
+      <figure>
+        <img src="widget-dark.png" alt="The same widget in dark theme" width="232" height="230">
+        <img class="bar" src="bar-dark.png" alt="The minimized widget in dark theme" width="232" height="34">
+        <figcaption>Dark</figcaption>
+      </figure>
+      <p class="stage-note">Full size, or minimized to one line. Click <strong>⋯</strong> for settings.</p>
+    </div>
+  </header>
+
+  <section id="desktop">
+    <h2>On your desktop</h2>
+    <p class="muted">It sits at the top right of your screen, above other windows, and stays out of the way.</p>
+    <picture>
+      <source srcset="desktop-dark.jpg" media="(prefers-color-scheme: dark)">
+      <img class="desktop" src="desktop-light.jpg" alt="A Windows desktop with the widget at the top right, showing a countdown to Maghrib and today's prayer times" width="1440" height="810" loading="lazy">
+    </picture>
+  </section>
+
+  <section id="features">
+    <h2>What it does</h2>
+    <div class="features">
+      <div class="feature"><h3>Today's six times</h3><p>Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha, with the next prayer highlighted.</p></div>
+      <div class="feature"><h3>Countdown</h3><p>Shows how long until the next prayer, always in view.</p></div>
+      <div class="feature"><h3>Notifications</h3><p>A notification at each prayer time, and a reminder shortly before it.</p></div>
+      <div class="feature"><h3>Your location</h3><p>Picks your city from your PC's time zone. Choose another city or add your own.</p></div>
+      <div class="feature"><h3>Your mosque's method</h3><p>11 calculation methods, and Standard or Hanafi Asr.</p></div>
+      <div class="feature"><h3>Your look</h3><p>Light or dark, accent colours, see-through, snaps to screen edges, and shrinks to a one-line bar.</p></div>
+    </div>
+  </section>
+
+  <section id="start">
+    <div class="cols">
+      <div>
+        <h2>How to start</h2>
+        <ol class="steps">
+          <li>Click <strong>Download for Windows</strong> and unzip the file.</li>
+          <li>Copy <strong>AzanWidget.exe</strong> to a folder you keep, for example Documents.</li>
+          <li>Double-click it. If Windows shows <strong>"Windows protected your PC"</strong>, click
+            <strong>More info</strong>, then <strong>Run anyway</strong>.</li>
+          <li>The widget appears at the top right of your screen. Click <strong>⋯</strong> on it, or right-click it, for settings.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="box">
+          <h3>Why Windows shows a warning</h3>
+          <p>Windows warns about new apps that aren't signed with a publisher's certificate. It doesn't mean a problem was
+            found in the app. You see it once.</p>
+        </div>
+        <div class="box">
+          <h3>If Windows says it "blocked this file"</h3>
+          <p>The message "An Application Control policy has blocked this file" means <strong>Smart App Control</strong> is
+            on. It has no "Run anyway" option, so this download can't run on that PC. The Microsoft Store version will.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="whats-new">
+    <h2 id="notes-title">What's new</h2>
+    <div id="notes"><p class="muted">See the <a href="https://github.com/mohmfg17-lab/azan-wa-salawat/releases/latest">latest release</a> for what changed.</p></div>
+  </section>
+
+  <section id="coming">
+    <div class="cols">
+      <div class="box">
+        <h3>Microsoft Store version</h3>
+        <p>A Store version is being prepared. Store apps are signed by Microsoft, so it will open without the warning
+          and work with Smart App Control.</p>
+      </div>
+      <div class="box">
+        <h3>Windows only, for now</h3>
+        <p>The widget is a small Windows app. A Mac version needs its own build and is planned.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Free. No ads, no tracking, no account. Your settings stay on your PC. Once a day the widget checks for a new
+      version. If there is one, it shows "New version — click to download", which opens the download page. You can turn
+      the check off in its menu.</p>
+    <p><a href="https://github.com/mohmfg17-lab/azan-wa-salawat/releases">All versions</a> ·
+      <a href="https://github.com/mohmfg17-lab/azan-wa-salawat">GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var repo = 'mohmfg17-lab/azan-wa-salawat';
+
+  // Phones and Macs can't run the app: say so under the button.
+  var ua = navigator.userAgent || '';
+  if (!/Windows/i.test(ua) || /Windows Phone/i.test(ua)) document.getElementById('not-windows').className += ' show';
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function inline(s) {
+    return esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+  // Release notes are Markdown: keep the "### Added/Changed/Fixed" parts and their "- " points.
+  function notesHtml(body) {
+    body = body.replace(/â€”/g, '—').replace(/â€“/g, '–').replace(/\r/g, '');
+    var start = body.indexOf('### ');
+    if (start < 0) return '';
+    var lines = body.slice(start).split('\n'), html = '', item = null, inList = false;
+    function flush() { if (item !== null) { html += '<li>' + inline(item) + '</li>'; item = null; } }
+    function close() { flush(); if (inList) { html += '</ul>'; inList = false; } }
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (/^SHA-256/.test(line)) break;
+      if (/^###\s+/.test(line)) { close(); html += '<h3>' + inline(line.replace(/^###\s+/, '')) + '</h3>'; }
+      else if (/^\s*[-*]\s+/.test(line)) { flush(); if (!inList) { html += '<ul>'; inList = true; } item = line.replace(/^\s*[-*]\s+/, ''); }
+      else if (/^\s+\S/.test(line) && item !== null) { item += ' ' + line.trim(); }
+      else if (!line.trim()) { flush(); }
+      else { close(); html += '<p>' + inline(line) + '</p>'; }
+    }
+    close();
+    return html;
+  }
+
+  if (!window.fetch) return;
+  fetch('https://api.github.com/repos/' + repo + '/releases/latest', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (rel) {
+      var version = String(rel.tag_name || '').replace(/^v/, '');
+      var assets = rel.assets || [], fixed = null, zip = null;
+      for (var i = 0; i < assets.length; i++) {
+        if (assets[i].name === 'Azan-wa-Salawat-Windows.zip') fixed = assets[i];
+        else if (!zip && /\.zip$/i.test(assets[i].name)) zip = assets[i];
+      }
+      var file = fixed || zip;
+      // Older releases have only the versioned zip: point the button straight at it.
+      if (!fixed && zip) document.getElementById('download').href = zip.browser_download_url;
+      if (version) {
+        var size = file ? ' · ' + Math.max(1, Math.round(file.size / 1024)) + ' KB' : '';
+        document.getElementById('version').textContent = 'Version ' + version + size;
+        document.getElementById('notes-title').textContent = "What's new in " + version;
+      }
+      var html = notesHtml(rel.body || '');
+      if (html) document.getElementById('notes').innerHTML = html +
+        '<p class="muted"><a href="' + esc(rel.html_url) + '">Full release notes and file check</a></p>';
+    })
+    .catch(function () { /* Keep the plain links that work without the API. */ });
+})();
+</script>
+</body>
+</html>
