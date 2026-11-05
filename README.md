@@ -5,7 +5,10 @@ notification at each prayer time and shortly before it. One small file, no insta
 
 ## Download
 
-Open **[Releases](../../releases/latest)** and download the `.zip`. Inside is the app and a "Read me first" file.
+**Website: [mohmfg17-lab.github.io/azan-wa-salawat](https://mohmfg17-lab.github.io/azan-wa-salawat/)**, with a
+Download button for the latest version.
+
+Or open **[Releases](../../releases/latest)** and download the `.zip`. Inside is the app and a "Read me first" file.
 
 1. Unzip and copy `AzanWidget.exe` to a folder you keep, for example Documents.
 2. Double-click it. If Windows shows "Windows protected your PC", click **More info**, then **Run anyway**
@@ -31,7 +34,8 @@ no date yet.
 
 ## Updates
 
-The widget checks this page once a day and shows "New version available" on the widget and in its menu. Click it to
-come here and download the new version. You can turn the check off in the menu.
+The widget checks this page once a day. When there is a new version, it shows "New version X — click to download" at
+the top of the widget (a coloured dot when minimized). Click it to come here and download the new version. You can
+turn the check off in the menu.
 
-This repository holds the releases only.
+This repository holds the releases, and the website's files in the `gh-pages` branch.
